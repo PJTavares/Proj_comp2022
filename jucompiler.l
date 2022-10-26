@@ -9,20 +9,20 @@
   //extern node* root;
   //extern bool erro_yacc;
 %}
-OCT		0[0-7]+
-HEX		0(x|X)[0-9A-Fa-f]+
+INTLIT 	0|[1-9][0-9_]*[0-9]|[1-9]
 ID		[A-Za-z_$][0-9A-Za-z_$]*
-NUM		[0-9_]*[0-9]
-EXP		[eE]("+"|"-")?[0-9_]*[0-9] 	
-REALLIT	({NUM}"."{NUM}?{EXP}?)|("."{NUM}{EXP}?)|({NUM}{EXP})
-ESC 	(\\f|\\n|\\r|\\t|\\\\|\\\")
+R_INT	[0-9][0-9_]*[0-9]|[0-9]
+EXP		[eE]("+"|"-")?{R_INT}
+	
+REALLIT	({R_INT}"."{R_INT}?{EXP}?)|("."{R_INT}{EXP}?)|({R_INT}{EXP})
+ESC 	([^\n\r\\"]|\\n|\\f|\\r|\\\\|\\\"|\\t)*
 RESERVED "--"|"++"|null|Integer|System|abstract|continue|for|new|switch|assert|default|package|synchronized|do|goto|private|this|break|implements|protected|throw|byte|import|throws|case|enum|instanceof|transient|catch|extends|short|try|char|final|interface|finally|long|strictfp|volatile|const|float|native|super|System|Integer|null
 
 %option yylineno
 %X COMMENT
 %X STRLIT
 %%
-true|false          {if(flagl){printf("BOOLIT\n");}ncol += yyleng;}
+true|false          {if(flagl){printf("BOOLLIT(%s)\n",yytext);}ncol += yyleng;}
 "&&" 				{if(flagl){printf("AND\n");}ncol += yyleng;}
 "=" 				{if(flagl){printf("ASSIGN\n");}ncol += yyleng;}
 "*" 				{if(flagl){printf("STAR\n");}ncol += yyleng;}	
@@ -53,13 +53,13 @@ true|false          {if(flagl){printf("BOOLIT\n");}ncol += yyleng;}
 
 boolean				{if(flagl){printf("BOOL\n");}ncol += yyleng;}
 class				{if(flagl){printf("CLASS\n");}ncol += yyleng;}
-".length"           {if(flagl){printf("DOTLENGHT\n");}ncol += yyleng;}
+".length"           {if(flagl){printf("DOTLENGTH\n");}ncol += yyleng;}
 double              {if(flagl){printf("DOUBLE\n");}ncol += yyleng;}
 else				{if(flagl){printf("ELSE\n");}ncol += yyleng;}
 if 					{if(flagl){printf("IF\n");}ncol += yyleng;}
 int 				{if(flagl){printf("INT\n");}ncol += yyleng;}
-System.out.print	{if(flagl){printf("PRINT\n");}ncol += yyleng;}
-Integer.parseInt    {if(flagl){printf("PARSEINT\n");}ncol += yyleng;}
+"System.out.print"	{if(flagl){printf("PRINT\n");}ncol += yyleng;}
+"Integer.parseInt"  {if(flagl){printf("PARSEINT\n");}ncol += yyleng;}
 
 public              {if(flagl){printf("PUBLIC\n");}ncol += yyleng;}
 return				{if(flagl){printf("RETURN\n");}ncol += yyleng;}
@@ -71,12 +71,10 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;}
 {RESERVED}			{if(flagl){printf("RESERVED(%s)\n",yytext);};ncol += yyleng;}
 {ID}				{if(flagl){printf("ID(%s)\n",yytext);}ncol += yyleng;}
 {REALLIT}			{if(flagl){printf("REALLIT(%s)\n",yytext);}ncol += yyleng;}
-{HEX}				{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;}
-{OCT}				{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;}
-{NUM}				{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;}
-
+{INTLIT}				{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;}
 
 "//".*\n			{ncol = 1;}
+
 "/*"				{BEGIN COMMENT; line_error = yylineno; col_error = ncol; ncol += yyleng;}
 <COMMENT>.			{ncol += yyleng;}
 <COMMENT>\n			{ncol = 1;}
@@ -84,10 +82,10 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;}
 <COMMENT><<EOF>>	{BEGIN 0;printf("Line %d, col %d: unterminated comment\n", line_error, col_error);  return 0;}
 
 \"							{BEGIN STRLIT; memset(str, 0, 1000); valid_str = 1; col_error = ncol; line_error = yylineno; ncol += yyleng; strcat(str, yytext);}
-<STRLIT>([^\n\r\"]|{ESC})	{ncol += yyleng; strcat(str, yytext);}
-<STRLIT>\\[^fnrt\\\"]		{printf("Line %d, col %d: invalid escape sequence (%s)\n", yylineno, ncol, yytext); ncol += yyleng;  valid_str = 0;}
+<STRLIT>{ESC}				{ncol += yyleng; strcat(str, yytext);}
+<STRLIT>\\(.?)				{printf("Line %d, col %d: invalid escape sequence (%s)\n", yylineno, ncol, yytext); ncol += yyleng;  valid_str = 0;}
+<STRLIT>\n|\r|(\r\n)		{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1; }
 <STRLIT>\"					{BEGIN 0; strcat(str, yytext); if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}ncol += yyleng;}
-<STRLIT>\n					{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1; }
 <STRLIT><<EOF>> 			{BEGIN 0; printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1; }
 
 [ \t]+			{ncol += yyleng;}
