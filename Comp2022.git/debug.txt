@@ -1,0 +1,64 @@
+meta1/Blank.java
+meta1/Comments1.java
+meta1/Comments2.java
+meta1/Comments3.java
+ Wrong Answer, run 'diff meta1/Comments3.out meta1/Comments3.out_temp' to see the differences
+meta1/Comments4.java
+ Wrong Answer, run 'diff meta1/Comments4.out meta1/Comments4.out_temp' to see the differences
+meta1/Comments5.java
+ Wrong Answer, run 'diff meta1/Comments5.out meta1/Comments5.out_temp' to see the differences
+meta1/EsteEPuxado.java
+ Wrong Answer, run 'diff meta1/EsteEPuxado.out meta1/EsteEPuxado.out_temp' to see the differences
+meta1/Factorial.java
+ Wrong Answer, run 'diff meta1/Factorial.out meta1/Factorial.out_temp' to see the differences
+meta1/HyperSuperMegaTest.java
+ Wrong Answer, run 'diff meta1/HyperSuperMegaTest.out meta1/HyperSuperMegaTest.out_temp' to see the differences
+meta1/INTLIT.java
+ Wrong Answer, run 'diff meta1/INTLIT.out meta1/INTLIT.out_temp' to see the differences
+meta1/INTLIT2.java
+ Wrong Answer, run 'diff meta1/INTLIT2.out meta1/INTLIT2.out_temp' to see the differences
+meta1/IdentifiersAndKeywords1.java
+ Wrong Answer, run 'diff meta1/IdentifiersAndKeywords1.out meta1/IdentifiersAndKeywords1.out_temp' to see the differences
+meta1/IdentifiersAndKeywords2.java
+ Wrong Answer, run 'diff meta1/IdentifiersAndKeywords2.out meta1/IdentifiersAndKeywords2.out_temp' to see the differences
+meta1/InsertionSort_e1.java
+ Wrong Answer, run 'diff meta1/InsertionSort_e1.out meta1/InsertionSort_e1.out_temp' to see the differences
+meta1/Missing_Reserved.java
+ Wrong Answer, run 'diff meta1/Missing_Reserved.out meta1/Missing_Reserved.out_temp' to see the differences
+meta1/Num.java
+ Wrong Answer, run 'diff meta1/Num.out meta1/Num.out_temp' to see the differences
+meta1/PoucoDeTudo.java
+ Wrong Answer, run 'diff meta1/PoucoDeTudo.out meta1/PoucoDeTudo.out_temp' to see the differences
+meta1/REALLIT.java
+ Wrong Answer, run 'diff meta1/REALLIT.out meta1/REALLIT.out_temp' to see the differences
+meta1/REALLIT_2.java
+ Wrong Answer, run 'diff meta1/REALLIT_2.out meta1/REALLIT_2.out_temp' to see the differences
+meta1/Reserved_All.java
+ Wrong Answer, run 'diff meta1/Reserved_All.out meta1/Reserved_All.out_temp' to see the differences
+meta1/Reserved_Blank.java
+ Wrong Answer, run 'diff meta1/Reserved_Blank.out meta1/Reserved_Blank.out_temp' to see the differences
+meta1/SRTLIT_AND_ERRORS.java
+ Wrong Answer, run 'diff meta1/SRTLIT_AND_ERRORS.out meta1/SRTLIT_AND_ERRORS.out_temp' to see the differences
+meta1/SimpleClass.java
+ Wrong Answer, run 'diff meta1/SimpleClass.out meta1/SimpleClass.out_temp' to see the differences
+meta1/StringsAndComments.java
+ Wrong Answer, run 'diff meta1/StringsAndComments.out meta1/StringsAndComments.out_temp' to see the differences
+meta1/TestesExtra.java
+ Wrong Answer, run 'diff meta1/TestesExtra.out meta1/TestesExtra.out_temp' to see the differences
+meta1/UnterminatedComment.java
+ Wrong Answer, run 'diff meta1/UnterminatedComment.out meta1/UnterminatedComment.out_temp' to see the differences
+meta1/errorsAndOthers.java
+ Wrong Answer, run 'diff meta1/errorsAndOthers.out meta1/errorsAndOthers.out_temp' to see the differences
+meta1/errors_e1.java
+ Wrong Answer, run 'diff meta1/errors_e1.out meta1/errors_e1.out_temp' to see the differences
+meta1/escape_sequences.java
+ Wrong Answer, run 'diff meta1/escape_sequences.out meta1/escape_sequences.out_temp' to see the differences
+meta1/ids.java
+ Wrong Answer, run 'diff meta1/ids.out meta1/ids.out_temp' to see the differences
+meta1/literals.java
+ Wrong Answer, run 'diff meta1/literals.out meta1/literals.out_temp' to see the differences
+meta1/newlines.java
+ Wrong Answer, run 'diff meta1/newlines.out meta1/newlines.out_temp' to see the differences
+meta1/strlit_win.java
+ Wrong Answer, run 'diff meta1/strlit_win.out meta1/strlit_win.out_temp' to see the differences
+Accepted: 3 / 33
