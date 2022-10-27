@@ -7,6 +7,7 @@ meta1/Comments5.java
 meta1/EsteEPuxado.java
 meta1/Factorial.java
 meta1/HyperSuperMegaTest.java
+ Wrong Answer, run 'diff meta1/HyperSuperMegaTest.out meta1/HyperSuperMegaTest.out_temp' to see the differences
 meta1/INTLIT.java
 meta1/INTLIT2.java
 meta1/IdentifiersAndKeywords1.java
@@ -15,22 +16,27 @@ meta1/InsertionSort_e1.java
 meta1/Missing_Reserved.java
 meta1/Num.java
 meta1/PoucoDeTudo.java
+ Wrong Answer, run 'diff meta1/PoucoDeTudo.out meta1/PoucoDeTudo.out_temp' to see the differences
 meta1/REALLIT.java
 meta1/REALLIT_2.java
 meta1/Reserved_All.java
 meta1/Reserved_Blank.java
 meta1/SRTLIT_AND_ERRORS.java
+ Wrong Answer, run 'diff meta1/SRTLIT_AND_ERRORS.out meta1/SRTLIT_AND_ERRORS.out_temp' to see the differences
 meta1/SimpleClass.java
 meta1/StringsAndComments.java
 meta1/TestesExtra.java
 meta1/UnterminatedComment.java
 meta1/errorsAndOthers.java
+ Wrong Answer, run 'diff meta1/errorsAndOthers.out meta1/errorsAndOthers.out_temp' to see the differences
 meta1/errors_e1.java
 meta1/escape_sequences.java
+ Wrong Answer, run 'diff meta1/escape_sequences.out meta1/escape_sequences.out_temp' to see the differences
 meta1/ids.java
 meta1/literals.java
+ Wrong Answer, run 'diff meta1/literals.out meta1/literals.out_temp' to see the differences
 meta1/newlines.java
  Wrong Answer, run 'diff meta1/newlines.out meta1/newlines.out_temp' to see the differences
 meta1/strlit_win.java
  Wrong Answer, run 'diff meta1/strlit_win.out meta1/strlit_win.out_temp' to see the differences
-Accepted: 31 / 33
+Accepted: 25 / 33
