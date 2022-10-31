@@ -7,7 +7,7 @@
 //Pedro João Frazão Curado Silva Tavares 2018280907
 
   int ncol = 1,col_error,line_error = 1,valid_str,line_aux;
-  bool flagl = false,flagt = false;
+  bool flagl = false,flagt = false,flag_print = false;
   char * str;
 
   extern node* root;
@@ -118,10 +118,8 @@ int main(int argc, char** argv){
 		}
 		if	(strcmp(argv[1], "-t") == 0){
 			flagt = true;
+			flag_print = true;
 			yyparse();
-			if(!erro_yacc){
-				print_ast(root,0);
-			}
 			free_ast(root);
 		}
 		if	(strcmp(argv[1], "-e2") == 0){
@@ -133,6 +131,7 @@ int main(int argc, char** argv){
 	else {
 		flagl = false;
         flagt = true;
+		flag_print = false;
 		
         yyparse();
 	}
