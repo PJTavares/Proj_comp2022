@@ -3,16 +3,28 @@
 #include <string.h>
 #include <stdbool.h>
 
+typedef enum{
+	raiz,
+	var,
+	metodos,
+	statements,
+	operators,
+	terminais,
+	id
+}type_node;
+
 typedef struct n{
-	char *token;
+	char* valor;
+	char* s_type;
+	type_node type;
+	int num_node;
+	struct n* father;
 	struct n* children;
 	struct n* siblings;
 } node;
 
-node* create_node(char* name);
+node* create_node(type_node type,char* valor,char* s_type);
+void add_node(node* father, node* new);
 void add_sibling(node* current, node* sibling);
-void add_child(node* current, node* son);
-bool nullBlock(node* current);
-node* new_id(char* name);
+int count_siblings(node* root);
 void print_ast(node* current,int level);
-void free_ast(node* current);
