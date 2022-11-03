@@ -13,8 +13,8 @@ extern char* yytext;
 bool erro_yacc = false;
 int yylex(void);
 void yyerror (char *s);
-struct n* root;
-struct n* aux;
+no root;
+no aux;
 
 %}
 
@@ -69,14 +69,12 @@ struct n* aux;
 %token WHILE
 %token RESERVED
 
-%token<id> ID INTLIT STRLIT REALLIT BOOLLIT
+%token<token_lex> ID INTLIT STRLIT REALLIT BOOLLIT
 
-%type <no> Program MethodDecl FieldDecl MethodHeader FormalParams MethodBody VarDecl VarDecl_aux Statement 
+%type <node> Program MethodDecl FieldDecl MethodHeader FormalParams MethodBody VarDecl VarDecl_aux Statement 
 MethodInvocation Assignment ParseArgs Expr Program_Aux FieldDecl_aux MethodHeader_aux Statement_aux 
 MethodBody_aux FormalParams_aux Expr_aux Statement_aux2 StatementPrint MethodInvocation_aux 
-MethodInvocationExpr ExprOperations Expr_aux2
-
-%type <type> Type
+MethodInvocationExpr ExprOperations Expr_aux2 Exprlit Type
 
 %right ASSIGN
 %left OR
@@ -92,9 +90,7 @@ MethodInvocationExpr ExprOperations Expr_aux2
 %right ELSE
 
 %%
-
-%%
-Program:	CLASS ID LBRACE Program_Aux			{root = create_node(raiz,"","Program);
+Program:	CLASS ID LBRACE Program_Aux	RBRACE	{root = create_node(raiz,"","Program");
 												aux = create_node(id,$2,"Id");
 												add_node(root,aux);
 												add_sibling(aux,$4);
@@ -103,6 +99,7 @@ Program:	CLASS ID LBRACE Program_Aux			{root = create_node(raiz,"","Program);
 													print_ast($$,0);
 												}}
 			;
+
 Program_Aux:								{$$ = NULL;}
 			|	MethodDecl Program_Aux		{$$ = $1; add_sibling($$,$2);}
 			|	FieldDecl Program_Aux		{$$ = $1; add_sibling($$,$2);}
@@ -110,9 +107,8 @@ Program_Aux:								{$$ = NULL;}
 			;
 
 MethodDecl:	PUBLIC STATIC MethodHeader MethodBody	{$$ = create_node(metodos,"","MethodDecl");
-													add_node($$,$3);
-													add_sibling($3,$4);}
-			;
+													add_node($$,$3);add_sibling($3,$4);}
+			;	
 
 FieldDecl:	PUBLIC STATIC Type ID FieldDecl_aux SEMICOLON		{$$ = create_node(var,"","FieldDecl");
 																add_node($$,$3);
@@ -120,8 +116,8 @@ FieldDecl:	PUBLIC STATIC Type ID FieldDecl_aux SEMICOLON		{$$ = create_node(var,
 																if($5 != NULL){
 																	aux = $5;
 																	while(aux != NULL){
-																		node* aux1 = create_node(var,"","FieldDecl");
-																		node* aux2 = create_node($3->type,$3->valor,$3->s_type);
+																		no aux1 = create_node(var,"","FieldDecl");
+																		no aux2 = create_node($3->type,$3->valor,$3->s_type);
 																		add_node(aux1,aux2);
 																		add_sibling(aux2,create_node(id,aux->valor,"Id"));
 																		add_sibling($$,aux1);
@@ -141,7 +137,7 @@ Type:	BOOL		{$$ = create_node(terminais,"","Bool");}
 	|	DOUBLE		{$$ = create_node(terminais,"","Double");}
 	;
 
-MethodHeader: 	Type ID LPAR MethodHeader_aux RPAR		{$$ = create_node(metodos,"","MethodHeader";)
+MethodHeader: 	Type ID LPAR MethodHeader_aux RPAR		{$$ = create_node(metodos,"","MethodHeader");
 														add_node($$,$1);add_sibling($1,create_node(id,$2,"Id"));
 														aux = create_node(metodos,"","MethodParams");
 														add_sibling($1,aux);add_node(aux,$4);}
@@ -150,7 +146,7 @@ MethodHeader: 	Type ID LPAR MethodHeader_aux RPAR		{$$ = create_node(metodos,"",
 														aux = create_node(terminais, "", "Void");
 														add_node($$, aux);
 														add_sibling(aux, create_node(id, $2, "Id"));
-														node* aux2 = create_node(metodos, "", "MethodParams");
+														no aux2 = create_node(metodos, "", "MethodParams");
 														add_sibling(aux, aux2);
 														add_node(aux2, $4);}
 			;
@@ -168,7 +164,7 @@ FormalParams:	Type ID FormalParams_aux		{$$ = create_node(metodos, "", "ParamDec
 			|	STRING LSQ RSQ ID				{$$ = create_node(metodos, "", "ParamDecl");
 												aux = create_node(metodos, "", "StringArray");
 												add_node($$, aux);
-												add_sibling(aux, cria_node(id, $4, "Id"));}
+												add_sibling(aux, create_node(id, $4, "Id"));}
 			;
 
 FormalParams_aux:										{$$ = NULL;}
@@ -183,7 +179,7 @@ MethodBody: LBRACE MethodBody_aux RBRACE		{$$ = create_node(metodos, "", "Method
 												add_node($$, $2);}
 			;
 
-MethodBody_aux: 								{$$ = NULL:}
+MethodBody_aux: 								{$$ = NULL;}
 			|	Statement MethodBody_aux		{if ($1 != NULL){
 													$$ = $1;
 													add_sibling($$,$2);
@@ -200,12 +196,12 @@ VarDecl: Type ID VarDecl_aux SEMICOLON			{$$ = create_node(metodos, "", "VarDecl
 												if ($3 != NULL){
 													aux = $3;
 													while (aux != NULL) {
-														node* aux1 = create_node(metodos, "", "VarDecl");
-														node* aux2 = create_node($1->type, $1->valor, $1->s_type);
+														no aux1 = create_node(metodos, "", "VarDecl");
+														no aux2 = create_node($1->type, $1->valor, $1->s_type);
 														add_node(aux1, aux2);
 														add_sibling(aux2, create_node(id, aux->valor, "Id"));
 														add_sibling($$, aux1);
-														aux = aux->irmao;
+														aux = aux->siblings;
 													}
 													free(aux);
 												}}
@@ -258,9 +254,9 @@ Statement: LBRACE Statement_aux RBRACE					{if (count_siblings($2) > 1){
 																add_sibling(aux, $7);
 															}
 															else {
-																node* aux2 = create_node(statements, "", "Block");
+																no aux2 = create_node(statements, "", "Block");
 																add_sibling(aux, aux2);
-																add_sibling(aux2, $7);
+																add_node(aux2, $7);
 															}
 														}}
 
@@ -279,7 +275,7 @@ Statement: LBRACE Statement_aux RBRACE					{if (count_siblings($2) > 1){
 														add_node($$,$2);}
 
 		|	Statement_aux2 SEMICOLON					{$$ = $1;}
-		|	PRINT LPAR StatementPrint RPAR SEMICOLON	{$$ = create_node(statements,"Print"):
+		|	PRINT LPAR StatementPrint RPAR SEMICOLON	{$$ = create_node(statements,"","Print");
 														add_node($$,$3);}
 		|	error SEMICOLON								{$$ = NULL;erro_yacc = true;}
 		;
@@ -303,7 +299,7 @@ Statement_aux2:						{$$ = NULL;}
 		|	ParseArgs				{$$ = $1;}
 		;
 
-StatementPrint:				{$$ = $1;}
+StatementPrint:	Expr		{$$ = $1;}
 			|	STRLIT		{$$ = create_node(terminais,$1,"StrLit");}
 			;
 
@@ -427,7 +423,7 @@ ExprOperations: ExprOperations PLUS ExprOperations		{$$ = create_node(operators,
 			|	Expr_aux2								{$$ = $1;}
 			|	ID										{$$ = create_node(id,$1,"Id");}
 			|	ID DOTLENGTH							{$$ = create_node(operators,"","Length");
-														add_node($$,create_node(id,$1,"Id));}
+														add_node($$,create_node(id,$1,"Id"));}
 
 			|	Exprlit									{$$ = $1;}
 			;
@@ -443,6 +439,6 @@ Exprlit:	INTLIT			{$$ = create_node(terminais,$1,"DecLit");}
 			
 %%
 void yyerror (char *s){
-	erro_yacc = true;
-	printf("Line %d, column %d: %s: %s\n",yylineno,ncol,s,yytext);
+	int aux = ncol - strlen(yytext);
+	printf("ERRO YACC Line %d, column %d: %s: %s\n",line_error,aux,s,yytext);
 }

@@ -686,10 +686,10 @@ char *yytext;
 //Pedro João Frazão Curado Silva Tavares 2018280907
 
   int ncol = 1,col_error,line_error = 1,valid_str,line_aux;
-  bool flagl = false,flagt = false;
+  bool flagl = false,flagt = false,flag_print = false;
   char * str;
 
-  extern node* root;
+  extern no root;
   extern bool erro_yacc;
 
 #line 696 "lex.yy.c"
@@ -698,7 +698,7 @@ char *yytext;
 
 #define INITIAL 0
 #define COMMENT 1
-#define STRLIT 2
+#define STR_LITERAL 2
 #define SINGLECOMMENT 3
 
 #ifndef YY_NO_UNISTD_H
@@ -1232,7 +1232,7 @@ YY_RULE_SETUP
 case 52:
 YY_RULE_SETUP
 #line 88 "jucompiler.l"
-{BEGIN STRLIT;str = yytext;valid_str = 1; col_error = ncol; ncol += yyleng;}
+{BEGIN STR_LITERAL;str = yytext;valid_str = 1; col_error = ncol; ncol += yyleng;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
@@ -1248,16 +1248,16 @@ case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
 #line 91 "jucompiler.l"
-{printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1;line_error++;BEGIN 0;}
+{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1;line_error++;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 92 "jucompiler.l"
-{if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}ncol += yyleng; BEGIN 0;}
+{BEGIN 0;if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}if(flagt && valid_str){yylval.token_lex = strdup(str);return STRLIT;}ncol += yyleng;}
 	YY_BREAK
-case YY_STATE_EOF(STRLIT):
+case YY_STATE_EOF(STR_LITERAL):
 #line 93 "jucompiler.l"
-{printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol += yyleng; BEGIN 0;}
+{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol += yyleng;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
@@ -2333,23 +2333,25 @@ int main(int argc, char** argv){
 		}
 		if	(strcmp(argv[1], "-t") == 0){
 			flagt = true;
+			flag_print = true;
 			yyparse();
-			if(!erro_yacc){
-				print_ast(root,0);
-			}
-			free_ast(root);
+			
+		
 		}
 		if	(strcmp(argv[1], "-e2") == 0){
-			flagt = false;
+			flagt = true;
+			flag_print = false;
 			yyparse();
-			free_ast(root);
+			yylex();
 		}
 	}
 	else {
 		flagl = false;
         flagt = true;
+		flag_print = false;
 		
         yyparse();
+		free_ast(root,0);
 	}
 	return 0;
 }

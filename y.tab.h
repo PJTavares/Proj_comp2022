@@ -54,49 +54,54 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    SEMICOLON = 258,               /* SEMICOLON  */
-    BLANKID = 259,                 /* BLANKID  */
-    PACKAGE = 260,                 /* PACKAGE  */
-    RETURN = 261,                  /* RETURN  */
-    AND = 262,                     /* AND  */
-    ASSIGN = 263,                  /* ASSIGN  */
-    STAR = 264,                    /* STAR  */
-    COMMA = 265,                   /* COMMA  */
-    DIV = 266,                     /* DIV  */
-    EQ = 267,                      /* EQ  */
-    GE = 268,                      /* GE  */
-    GT = 269,                      /* GT  */
-    LBRACE = 270,                  /* LBRACE  */
-    LE = 271,                      /* LE  */
-    LPAR = 272,                    /* LPAR  */
-    LSQ = 273,                     /* LSQ  */
-    LT = 274,                      /* LT  */
-    MINUS = 275,                   /* MINUS  */
-    MOD = 276,                     /* MOD  */
-    NE = 277,                      /* NE  */
-    NOT = 278,                     /* NOT  */
-    OR = 279,                      /* OR  */
-    PLUS = 280,                    /* PLUS  */
-    RBRACE = 281,                  /* RBRACE  */
-    RPAR = 282,                    /* RPAR  */
-    RSQ = 283,                     /* RSQ  */
-    ELSE = 284,                    /* ELSE  */
-    FOR = 285,                     /* FOR  */
-    IF = 286,                      /* IF  */
-    VAR = 287,                     /* VAR  */
-    INT = 288,                     /* INT  */
-    FLOAT32 = 289,                 /* FLOAT32  */
-    BOOL = 290,                    /* BOOL  */
-    STRING = 291,                  /* STRING  */
+    AND = 258,                     /* AND  */
+    ASSIGN = 259,                  /* ASSIGN  */
+    STAR = 260,                    /* STAR  */
+    COMMA = 261,                   /* COMMA  */
+    DIV = 262,                     /* DIV  */
+    EQ = 263,                      /* EQ  */
+    GE = 264,                      /* GE  */
+    GT = 265,                      /* GT  */
+    LBRACE = 266,                  /* LBRACE  */
+    LE = 267,                      /* LE  */
+    LPAR = 268,                    /* LPAR  */
+    LSQ = 269,                     /* LSQ  */
+    LT = 270,                      /* LT  */
+    MINUS = 271,                   /* MINUS  */
+    MOD = 272,                     /* MOD  */
+    NE = 273,                      /* NE  */
+    NOT = 274,                     /* NOT  */
+    OR = 275,                      /* OR  */
+    PLUS = 276,                    /* PLUS  */
+    RBRACE = 277,                  /* RBRACE  */
+    RPAR = 278,                    /* RPAR  */
+    RSQ = 279,                     /* RSQ  */
+    SEMICOLON = 280,               /* SEMICOLON  */
+    ARROW = 281,                   /* ARROW  */
+    LSHIFT = 282,                  /* LSHIFT  */
+    RSHIFT = 283,                  /* RSHIFT  */
+    XOR = 284,                     /* XOR  */
+    BOOL = 285,                    /* BOOL  */
+    CLASS = 286,                   /* CLASS  */
+    DOTLENGTH = 287,               /* DOTLENGTH  */
+    DOUBLE = 288,                  /* DOUBLE  */
+    ELSE = 289,                    /* ELSE  */
+    IF = 290,                      /* IF  */
+    INT = 291,                     /* INT  */
     PRINT = 292,                   /* PRINT  */
     PARSEINT = 293,                /* PARSEINT  */
-    FUNC = 294,                    /* FUNC  */
-    CMDARGS = 295,                 /* CMDARGS  */
-    RESERVED = 296,                /* RESERVED  */
-    INTLIT = 297,                  /* INTLIT  */
-    REALLIT = 298,                 /* REALLIT  */
-    ID = 299,                      /* ID  */
-    STR = 300                      /* STR  */
+    PUBLIC = 294,                  /* PUBLIC  */
+    RETURN = 295,                  /* RETURN  */
+    STATIC = 296,                  /* STATIC  */
+    STRING = 297,                  /* STRING  */
+    VOID = 298,                    /* VOID  */
+    WHILE = 299,                   /* WHILE  */
+    RESERVED = 300,                /* RESERVED  */
+    ID = 301,                      /* ID  */
+    INTLIT = 302,                  /* INTLIT  */
+    STRLIT = 303,                  /* STRLIT  */
+    REALLIT = 304,                 /* REALLIT  */
+    BOOLLIT = 305                  /* BOOLLIT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -105,61 +110,65 @@ extern int yydebug;
 #define YYEOF 0
 #define YYerror 256
 #define YYUNDEF 257
-#define SEMICOLON 258
-#define BLANKID 259
-#define PACKAGE 260
-#define RETURN 261
-#define AND 262
-#define ASSIGN 263
-#define STAR 264
-#define COMMA 265
-#define DIV 266
-#define EQ 267
-#define GE 268
-#define GT 269
-#define LBRACE 270
-#define LE 271
-#define LPAR 272
-#define LSQ 273
-#define LT 274
-#define MINUS 275
-#define MOD 276
-#define NE 277
-#define NOT 278
-#define OR 279
-#define PLUS 280
-#define RBRACE 281
-#define RPAR 282
-#define RSQ 283
-#define ELSE 284
-#define FOR 285
-#define IF 286
-#define VAR 287
-#define INT 288
-#define FLOAT32 289
-#define BOOL 290
-#define STRING 291
+#define AND 258
+#define ASSIGN 259
+#define STAR 260
+#define COMMA 261
+#define DIV 262
+#define EQ 263
+#define GE 264
+#define GT 265
+#define LBRACE 266
+#define LE 267
+#define LPAR 268
+#define LSQ 269
+#define LT 270
+#define MINUS 271
+#define MOD 272
+#define NE 273
+#define NOT 274
+#define OR 275
+#define PLUS 276
+#define RBRACE 277
+#define RPAR 278
+#define RSQ 279
+#define SEMICOLON 280
+#define ARROW 281
+#define LSHIFT 282
+#define RSHIFT 283
+#define XOR 284
+#define BOOL 285
+#define CLASS 286
+#define DOTLENGTH 287
+#define DOUBLE 288
+#define ELSE 289
+#define IF 290
+#define INT 291
 #define PRINT 292
 #define PARSEINT 293
-#define FUNC 294
-#define CMDARGS 295
-#define RESERVED 296
-#define INTLIT 297
-#define REALLIT 298
-#define ID 299
-#define STR 300
+#define PUBLIC 294
+#define RETURN 295
+#define STATIC 296
+#define STRING 297
+#define VOID 298
+#define WHILE 299
+#define RESERVED 300
+#define ID 301
+#define INTLIT 302
+#define STRLIT 303
+#define REALLIT 304
+#define BOOLLIT 305
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 20 "jucompiler.y"
+#line 21 "jucompiler.y"
 
+	struct node* node;
 	char* token_lex;
-	struct n* no;
-	char* type;
 
-#line 163 "y.tab.h"
+#line 172 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

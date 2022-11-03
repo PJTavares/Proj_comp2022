@@ -11,6 +11,7 @@ public static void main(String[] args) {
         int n;
         /*argument = Integer.parseInt(args[0]);
            System.out.print(factorial(argument));*/
+           
 }
 public static int ole(int n) {
         /*if (n == 0)

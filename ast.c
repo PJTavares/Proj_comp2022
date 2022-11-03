@@ -1,11 +1,11 @@
 #include "ast.h"
 
-node* create_node(type_node type,char* valor,char* s_type){
-	node* n = malloc(sizeof(node));
+no create_node(type_node type,char* valor,char* s_type){
+	no n = malloc(sizeof(node));
 	n->s_type = (char*)malloc(1 + strlen(s_type) * sizeof(char));
 	strcpy(n->s_type,s_type);
 	n->valor = (char*)malloc(1 + strlen(valor) * sizeof(char));
-	strcpt(n->valor,valor);
+	strcpy(n->valor,valor);
 	n->type = type;
 	n->num_node = 0;
 	n->father = NULL;
@@ -14,7 +14,7 @@ node* create_node(type_node type,char* valor,char* s_type){
 	return n;
 }
 
-void add_node(node* father, node* new_node){
+void add_node(no father, no new_node){
 	if(new_node == NULL){
 		return;
 	}
@@ -23,11 +23,11 @@ void add_node(node* father, node* new_node){
 	new_node->father = father;
 }
 
-void add_sibling(node* current, node* sibling){
+void add_sibling(no current, no sibling){
 	if (current == NULL || sibling == NULL){
 		return;
 	}
-	node* temp = current;
+	no temp = current;
 	while(temp->siblings != NULL){
 		temp = temp->siblings;
 	}
@@ -38,9 +38,9 @@ void add_sibling(node* current, node* sibling){
 	}
 }
 
-int count_siblings(node* root){
+int count_siblings(no root){
 	int count = 0;
-	node* temp = root;
+	no temp = root;
 	while(temp != NULL){
 		temp = temp->siblings;
 		count++;
@@ -48,7 +48,7 @@ int count_siblings(node* root){
 	return count;
 }
 
-void print_ast(node* current,int level){
+void print_ast(no current,int level){
 	if (current == NULL) 
 		return;
 
@@ -68,12 +68,30 @@ void print_ast(node* current,int level){
 			printf("%s\n",current->s_type);
 		}
 	}
-	node* temp = current->children;
+	no temp = current->children;
 	
 	//free_ast()
 	while(temp != NULL){
-		node* node_free = temp;
+		no node_free = temp;
 		print_ast(temp,level+1);
+		temp = temp->siblings;
+		free(node_free->valor);
+		free(node_free->s_type);
+		free(node_free);
+	}	
+}
+
+
+void free_ast(no current,int level){
+	if (current == NULL) 
+		return;
+
+	no temp = current->children;
+	
+	//free_ast()
+	while(temp != NULL){
+		no node_free = temp;
+		free_ast(temp,level+1);
 		temp = temp->siblings;
 		free(node_free->valor);
 		free(node_free->s_type);

@@ -10,7 +10,7 @@
   bool flagl = false,flagt = false,flag_print = false;
   char * str;
 
-  extern node* root;
+  extern no root;
   extern bool erro_yacc;
 
 %}
@@ -25,7 +25,7 @@ ESC 		([^\n\r\\"]|\\n|\\f|\\r|\\\\|\\\"|\\t)*
 RESERVED 	"--"|"++"|null|Integer|System|abstract|continue|for|new|switch|assert|default|package|synchronized|do|goto|private|this|break|implements|protected|throw|byte|import|throws|case|enum|instanceof|transient|catch|extends|short|try|char|final|interface|finally|long|strictfp|volatile|const|float|native|super|System|Integer|null
 
 %X COMMENT
-%X STRLIT
+%X STR_LITERAL
 %X SINGLECOMMENT
 %%
 true|false          {if(flagl){printf("BOOLLIT(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return BOOLLIT;}}
@@ -85,12 +85,12 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;if(flagt){retur
 " "										{ncol+=yyleng;}
 
 
-\"							{BEGIN STRLIT;str = yytext;valid_str = 1; col_error = ncol; ncol += yyleng;}
-<STRLIT>{ESC}				{ncol += yyleng;}
-<STRLIT>\\(.?)				{printf("Line %d, col %d: invalid escape sequence (%s)\n", line_error, ncol, yytext); ncol += yyleng;  valid_str = 0;}
-<STRLIT>\n|\r|(\r\n)		{printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1;line_error++;BEGIN 0;}
-<STRLIT>\"					{if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}ncol += yyleng; BEGIN 0;}
-<STRLIT><<EOF>> 			{printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol += yyleng; BEGIN 0;}
+\"								{BEGIN STR_LITERAL;str = yytext;valid_str = 1; col_error = ncol; ncol += yyleng;}
+<STR_LITERAL>{ESC}				{ncol += yyleng;}
+<STR_LITERAL>\\(.?)				{printf("Line %d, col %d: invalid escape sequence (%s)\n", line_error, ncol, yytext); ncol += yyleng;  valid_str = 0;}
+<STR_LITERAL>\n|\r|(\r\n)		{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1;line_error++;}
+<STR_LITERAL>\"					{BEGIN 0;if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}if(flagt && valid_str){yylval.token_lex = strdup(str);return STRLIT;}ncol += yyleng;}
+<STR_LITERAL><<EOF>> 			{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol += yyleng;}
 
 "//"							{BEGIN SINGLECOMMENT; ncol+=yyleng;}
 <SINGLECOMMENT>\n|\r|(\r\n)		{BEGIN 0; line_error++; ncol=1;}
@@ -120,12 +120,14 @@ int main(int argc, char** argv){
 			flagt = true;
 			flag_print = true;
 			yyparse();
-			free_ast(root);
+			
+		
 		}
 		if	(strcmp(argv[1], "-e2") == 0){
-			flagt = false;
+			flagt = true;
+			flag_print = false;
 			yyparse();
-			free_ast(root);
+			yylex();
 		}
 	}
 	else {
@@ -134,6 +136,7 @@ int main(int argc, char** argv){
 		flag_print = false;
 		
         yyparse();
+		free_ast(root,0);
 	}
 	return 0;
 }

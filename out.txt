@@ -1,4 +1,11 @@
-Line 1, col 1: unterminated string literal
-Line 2, col 23: invalid escape sequence (\)
-Line 2, col 2: unterminated string literal
-Line 3, col 4: invalid escape sequence (\g)
+Line 11, col 22: unterminated string literal
+Line 12, column 4: syntax error: }
+Line 13, col 22: unterminated string literal
+Line 16, col 48: unterminated string literal
+Line 17, column 3: syntax error: int
+Line 28, column 2: syntax error: public
+Line 30, col 20: unterminated string literal
+Line 32, col 20: unterminated string literal
+Line 33, column 3: syntax error: System.out.print
+Line 37, col 3: unterminated string literal
+Line 46, col 1: unterminated comment
