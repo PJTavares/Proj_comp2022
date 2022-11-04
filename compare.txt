@@ -1,6 +1,10 @@
 class newClass{
 	public static int main(String[] args) {
-        System.out.print("TESTE");
+                "csacsa
         return 0;
 	}
 }
+/*
+
+
+

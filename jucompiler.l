@@ -5,7 +5,7 @@
 #include "ast.h"
 
 //Pedro João Frazão Curado Silva Tavares 2018280907
-
+// acesso ao mooshak: nEtmo7
   int ncol = 1,col_error,line_error = 1,valid_str,line_aux;
   bool flagl = false,flagt = false,flag_print = false;
   char * str;
@@ -24,9 +24,10 @@ REALLIT		({R_INT}"."{R_INT}?{EXP}?)|("."{R_INT}{EXP}?)|({R_INT}{EXP})
 ESC 		([^\n\r\\"]|\\n|\\f|\\r|\\\\|\\\"|\\t)*
 RESERVED 	"--"|"++"|null|Integer|System|abstract|continue|for|new|switch|assert|default|package|synchronized|do|goto|private|this|break|implements|protected|throw|byte|import|throws|case|enum|instanceof|transient|catch|extends|short|try|char|final|interface|finally|long|strictfp|volatile|const|float|native|super|System|Integer|null
 
-%X COMMENT
 %X STR_LITERAL
 %X SINGLECOMMENT
+%X COMMENT
+
 %%
 true|false          {if(flagl){printf("BOOLLIT(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return BOOLLIT;}}
 "&&" 				{if(flagl){printf("AND\n");}ncol += yyleng;if(flagt){return AND;}}
@@ -77,7 +78,7 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;if(flagt){retur
 {RESERVED}			{if(flagl){printf("RESERVED(%s)\n",yytext);};ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return RESERVED;}}
 {ID}				{if(flagl){printf("ID(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return ID;}}
 {REALLIT}			{if(flagl){printf("REALLIT(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return REALLIT;}}
-{INTLIT}				{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return INTLIT;}}
+{INTLIT}			{if(flagl){printf("INTLIT(%s)\n",yytext);}ncol += yyleng;if(flagt){yylval.token_lex = strdup(yytext);return INTLIT;}}
 
 "\f"									{ncol+=yyleng;}
 \n|\r|(\r\n)							{line_error++; ncol = 1;}
@@ -89,7 +90,7 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;if(flagt){retur
 <STR_LITERAL>{ESC}				{ncol += yyleng;}
 <STR_LITERAL>\\(.?)				{printf("Line %d, col %d: invalid escape sequence (%s)\n", line_error, ncol, yytext); ncol += yyleng;  valid_str = 0;}
 <STR_LITERAL>\n|\r|(\r\n)		{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol = 1;line_error++;}
-<STR_LITERAL>\"					{BEGIN 0;if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}if(flagt && valid_str){yylval.token_lex = strdup(str);return STRLIT;}ncol += yyleng;}
+<STR_LITERAL>\"					{BEGIN 0;ncol += yyleng;if (flagl && valid_str){ printf("STRLIT(%s)\n", str);}if(flagt && valid_str){yylval.token_lex = strdup(str);yytext = str;return STRLIT;}}
 <STR_LITERAL><<EOF>> 			{BEGIN 0;printf("Line %d, col %d: unterminated string literal\n", line_error, col_error); ncol += yyleng;}
 
 "//"							{BEGIN SINGLECOMMENT; ncol+=yyleng;}
@@ -100,10 +101,9 @@ while               {if(flagl){printf("WHILE\n");}ncol += yyleng;if(flagt){retur
 <COMMENT>"*/"				{BEGIN 0; ncol += yyleng;}
 <COMMENT>\n|\r|(\r\n)		{ncol = 1;line_error++;}
 <COMMENT>.					{ncol += yyleng;}
-<COMMENT><<EOF>>			{printf("Line %d, col %d: unterminated comment\n", line_aux, col_error);BEGIN 0;}
+<COMMENT><<EOF>>			{printf("Line %d, col %d: unterminated comment\n", line_aux, col_error);}
 
 .				{printf("Line %d, col %d: illegal character (%s)\n",line_error, ncol, yytext); ncol += yyleng; }
-<<EOF>> 		{return 0;}
 %%
 int main(int argc, char** argv){
 
@@ -113,32 +113,30 @@ int main(int argc, char** argv){
 			yylex();
 		}
         if	(strcmp(argv[1], "-e1") == 0){
-			flagl = false;
 			yylex();
 		}
 		if	(strcmp(argv[1], "-t") == 0){
 			flagt = true;
 			flag_print = true;
 			yyparse();
-			
-		
 		}
 		if	(strcmp(argv[1], "-e2") == 0){
 			flagt = true;
-			flag_print = false;
 			yyparse();
-			yylex();
 		}
 	}
 	else {
-		flagl = false;
-        flagt = true;
-		flag_print = false;
+		flagt = true;
 		
         yyparse();
 		free_ast(root,0);
 	}
 	return 0;
+}
+
+void yyerror (char *s){
+	int aux = ncol - strlen(yytext);
+	printf("Line %d, col %d: %s: %s\n",line_error,aux,s,yytext);
 }
 
 int yywrap()

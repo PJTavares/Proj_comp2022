@@ -92,8 +92,7 @@ MethodInvocationExpr ExprOperations Expr_aux2 Exprlit Type
 %%
 Program:	CLASS ID LBRACE Program_Aux	RBRACE	{root = create_node(raiz,"","Program");
 												aux = create_node(id,$2,"Id");
-												add_node(root,aux);
-												add_sibling(aux,$4);
+												add_node(root,aux);add_sibling(aux,$4);
 												$$ = root;
 												if(flagt == true && erro_yacc == false && flag_print == true){
 													print_ast($$,0);
@@ -191,8 +190,7 @@ MethodBody_aux: 								{$$ = NULL;}
 			|	VarDecl	MethodBody_aux			{$$ = $1;add_sibling($$,$2);}			;
 
 VarDecl: Type ID VarDecl_aux SEMICOLON			{$$ = create_node(metodos, "", "VarDecl");
-												add_node($$, $1);
-												add_sibling($1, create_node(id, $2, "Id"));
+												add_node($$, $1);add_sibling($1, create_node(id, $2, "Id"));
 												if ($3 != NULL){
 													aux = $3;
 													while (aux != NULL) {
@@ -225,12 +223,10 @@ Statement: LBRACE Statement_aux RBRACE					{if (count_siblings($2) > 1){
 														add_node($$,$3);
 														aux = create_node(statements, "", "Block");
 														if (count_siblings($5) == 1 && $5 != NULL){
-															add_sibling($3, $5);
-															add_sibling($5, aux);
+															add_sibling($3, $5);add_sibling($5, aux);
 														}
 														else{
-															add_sibling($3, aux);
-															add_node(aux, $5);
+															add_sibling($3, aux);add_node(aux, $5);
 															add_sibling(aux, create_node(statements, "", "Block"));
 														}}
 
@@ -438,7 +434,3 @@ Exprlit:	INTLIT			{$$ = create_node(terminais,$1,"DecLit");}
 	;
 			
 %%
-void yyerror (char *s){
-	int aux = ncol - strlen(yytext);
-	printf("ERRO YACC Line %d, column %d: %s: %s\n",line_error,aux,s,yytext);
-}

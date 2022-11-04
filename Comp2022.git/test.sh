@@ -18,14 +18,14 @@ exe="$1"
 
 accepted=0
 total=0
-for inp in meta1/*.java; do 
+for inp in meta2/*.java; do 
     echo "$inp"
     out=${inp%.java}.out
     tmp=${inp%.java}.out_temp
     if [[ "$inp" == *_e1.java ]]; then
-        $exe -e1 < "$inp" > "$tmp"
+        $exe -e2 < "$inp" > "$tmp"
     else
-        $exe -l < "$inp" > "$tmp"
+        $exe -t < "$inp" > "$tmp"
     fi
     lines=$(diff $out $tmp | wc -l)
     if [[ $lines -gt 0 ]]; then
