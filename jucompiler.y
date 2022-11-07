@@ -10,7 +10,8 @@
 extern int yylineno, ncol, yyleng, line_error, col_error;
 extern bool flagl,flagt,flag_print;
 extern char* yytext;
-bool erro_yacc = false;
+bool erro_yacc = true;
+
 int yylex(void);
 void yyerror (char *s);
 no root;
@@ -92,11 +93,10 @@ MethodInvocationExpr ExprOperations Expr_aux2 Exprlit Type
 %%
 Program:	CLASS ID LBRACE Program_Aux	RBRACE	{root = create_node(raiz,"","Program");
 												aux = create_node(id,$2,"Id");
-												add_node(root,aux);add_sibling(aux,$4);
+												add_node(root,aux);
+												add_sibling(aux,$4);
 												$$ = root;
-												if(flagt == true && erro_yacc == false && flag_print == true){
-													print_ast($$,0);
-												}}
+												}
 			;
 
 Program_Aux:								{$$ = NULL;}
@@ -123,7 +123,7 @@ FieldDecl:	PUBLIC STATIC Type ID FieldDecl_aux SEMICOLON		{$$ = create_node(var,
 																		aux = aux->siblings;
 																	}
 																	free(aux);}}
-		|	error SEMICOLON		{$$ = NULL;erro_yacc = true;}
+		|	error SEMICOLON		{$$ = NULL;erro_yacc = false;}
 		;
 
 FieldDecl_aux:								{$$ = NULL;}
@@ -190,7 +190,8 @@ MethodBody_aux: 								{$$ = NULL;}
 			|	VarDecl	MethodBody_aux			{$$ = $1;add_sibling($$,$2);}			;
 
 VarDecl: Type ID VarDecl_aux SEMICOLON			{$$ = create_node(metodos, "", "VarDecl");
-												add_node($$, $1);add_sibling($1, create_node(id, $2, "Id"));
+												add_node($$, $1);
+												add_sibling($1, create_node(id, $2, "Id"));
 												if ($3 != NULL){
 													aux = $3;
 													while (aux != NULL) {
@@ -223,10 +224,12 @@ Statement: LBRACE Statement_aux RBRACE					{if (count_siblings($2) > 1){
 														add_node($$,$3);
 														aux = create_node(statements, "", "Block");
 														if (count_siblings($5) == 1 && $5 != NULL){
-															add_sibling($3, $5);add_sibling($5, aux);
+															add_sibling($3, $5);
+															add_sibling($5, aux);
 														}
 														else{
-															add_sibling($3, aux);add_node(aux, $5);
+															add_sibling($3, aux);
+															add_node(aux, $5);
 															add_sibling(aux, create_node(statements, "", "Block"));
 														}}
 
@@ -273,7 +276,7 @@ Statement: LBRACE Statement_aux RBRACE					{if (count_siblings($2) > 1){
 		|	Statement_aux2 SEMICOLON					{$$ = $1;}
 		|	PRINT LPAR StatementPrint RPAR SEMICOLON	{$$ = create_node(statements,"","Print");
 														add_node($$,$3);}
-		|	error SEMICOLON								{$$ = NULL;erro_yacc = true;}
+		|	error SEMICOLON								{$$ = NULL;erro_yacc = false;}
 		;
 
 Statement_aux:								{$$ = NULL;}
@@ -304,7 +307,7 @@ MethodInvocation: ID LPAR MethodInvocation_aux RPAR		{$$ = create_node(operators
 														add_node($$, aux);
 														add_sibling(aux, $3);}
 
-			|	ID LPAR error RPAR						{$$ = NULL; erro_yacc = true;}
+			|	ID LPAR error RPAR						{$$ = NULL; erro_yacc = false;}
 			;
 
 MethodInvocation_aux: 								{$$ = NULL;}
@@ -332,7 +335,7 @@ ParseArgs:	PARSEINT LPAR ID LSQ Expr RSQ RPAR		{$$ = create_node(operators, "", 
 													add_node($$, aux);
 													add_sibling(aux, $5);}
 
-		|	PARSEINT LPAR error RPAR				{$$ = NULL; erro_yacc = true;}
+		|	PARSEINT LPAR error RPAR				{$$ = NULL; erro_yacc = false;}
 		;
 
 Expr: Assignment		{$$ = $1;}
@@ -414,7 +417,7 @@ ExprOperations: ExprOperations PLUS ExprOperations		{$$ = create_node(operators,
 
 			|	LPAR Expr RPAR							{$$ = $2;}
 
-			|	LPAR error RPAR							{$$ = NULL; erro_yacc = true;}
+			|	LPAR error RPAR							{$$ = NULL; erro_yacc = false;}
 
 			|	Expr_aux2								{$$ = $1;}
 			|	ID										{$$ = create_node(id,$1,"Id");}
@@ -434,3 +437,8 @@ Exprlit:	INTLIT			{$$ = create_node(terminais,$1,"DecLit");}
 	;
 			
 %%
+void yyerror (char *s){
+	erro_yacc = false;
+	int aux = ncol - strlen(yytext);
+	printf("Line %d, col %d: %s: %s\n",line_error,aux,s,yytext);
+}

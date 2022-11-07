@@ -684,7 +684,7 @@ char *yytext;
 #include "ast.h"
 
 //Pedro João Frazão Curado Silva Tavares 2018280907
-// acesso ao mooshak: nEtmo7
+
   int ncol = 1,col_error,line_error = 1,valid_str,line_aux;
   bool flagl = false,flagt = false,flag_print = false;
   char * str;
@@ -1298,22 +1298,24 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
 #line 104 "jucompiler.l"
-{printf("Line %d, col %d: unterminated comment\n", line_aux, col_error);BEGIN 0;}
+{BEGIN 0;printf("Line %d, col %d: unterminated comment\n", line_aux, col_error);}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 106 "jucompiler.l"
 {printf("Line %d, col %d: illegal character (%s)\n",line_error, ncol, yytext); ncol += yyleng; }
 	YY_BREAK
-case 65:
-YY_RULE_SETUP
-#line 107 "jucompiler.l"
-ECHO;
-	YY_BREAK
-#line 1314 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(SINGLECOMMENT):
-	yyterminate();
+#line 107 "jucompiler.l"
+{return 0;}
+	YY_BREAK
+case 65:
+YY_RULE_SETUP
+#line 108 "jucompiler.l"
+ECHO;
+	YY_BREAK
+#line 1319 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2316,7 +2318,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 107 "jucompiler.l"
+#line 108 "jucompiler.l"
 
 int main(int argc, char** argv){
 
@@ -2326,30 +2328,32 @@ int main(int argc, char** argv){
 			yylex();
 		}
         if	(strcmp(argv[1], "-e1") == 0){
+			flagl = false;
 			yylex();
 		}
 		if	(strcmp(argv[1], "-t") == 0){
 			flagt = true;
 			flag_print = true;
 			yyparse();
+			if(erro_yacc){
+				print_ast(root,0);
+			}
 		}
 		if	(strcmp(argv[1], "-e2") == 0){
 			flagt = true;
+			flag_print = false;
 			yyparse();
 		}
 	}
 	else {
-		flagt = true;
+		flagl = false;
+        flagt = true;
+		flag_print = false;
 		
         yyparse();
 		free_ast(root,0);
 	}
 	return 0;
-}
-
-void yyerror (char *s){
-	int aux = ncol - strlen(yytext);
-	printf("Line %d, col %d: %s: %s\n",line_error,aux,s,yytext);
 }
 
 int yywrap()
