@@ -1,3 +1,0 @@
-lex jucompiler.l
-yacc -d jucompiler.ya   
-cc -o ju ast.c y.tab.c lex.yy.c

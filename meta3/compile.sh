@@ -1,0 +1,1 @@
+lex jucompiler.l && yacc -d jucompiler.y && cc -o ju ast.c y.tab.c lex.yy.c

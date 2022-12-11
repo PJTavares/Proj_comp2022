@@ -3,6 +3,8 @@
 #include <string.h>
 #include "y.tab.h"
 #include "ast.h"
+#include "semantics.h"
+#inclue "symbol_table.h"
 
 //Pedro João Frazão Curado Silva Tavares 2018280907
 
@@ -113,11 +115,11 @@ int main(int argc, char** argv){
 			flagl = true;
 			yylex();
 		}
-        if	(strcmp(argv[1], "-e1") == 0){
+        else if	(strcmp(argv[1], "-e1") == 0){
 			flagl = false;
 			yylex();
 		}
-		if	(strcmp(argv[1], "-t") == 0){
+		else if	(strcmp(argv[1], "-t") == 0){
 			flagt = true;
 			flag_print = true;
 			yyparse();
@@ -125,10 +127,17 @@ int main(int argc, char** argv){
 				print_ast(root,0);
 			}
 		}
-		if	(strcmp(argv[1], "-e2") == 0){
+		else if	(strcmp(argv[1], "-e2") == 0){
 			flagt = true;
 			flag_print = false;
 			yyparse();
+		}
+		else if(strcmp(argv[1],"-s") == 0){
+			flagt = true;
+			yyparse();
+			int errors = check_program(root);
+			if(errors)
+				printf("Program has errors");
 		}
 	}
 	else {
